@@ -20,20 +20,98 @@ const MultiGuessPlayItem: React.FC<Props> = ({
 }) => {
 
   return (
-    <div className="border border-[#3A4052] rounded p-2 bg-[#1C1F29] mb-4">
+    <div className="border border-[#3A4052] rounded p-2 bg-[#1C1F29] mb-4 ">
       {isActive ? (
         <>
-          <div className="sm:col-span-4">
-            <input type="text" placeholder="Time da casa" value={play.homeTeam || ""} onChange={(e) => onUpdate("homeTeam", e.target.value)} className="input bg-[#15161D] border border-[#3A4052] rounded-sm text-xs text-center w-[70px]" />
-            <input type="text" placeholder="Time visitante" value={play.awayTeam || ""} onChange={(e) => onUpdate("awayTeam", e.target.value)} className="input bg-[#15161D] border border-[#3A4052] rounded-sm text-xs text-center w-[70px]" />
-            <input type="text" placeholder="Região" value={play.country || ""} onChange={(e) => onUpdate("country", e.target.value)} className="input bg-[#15161D] border border-[#3A4052] rounded-sm text-xs text-center w-[70px]" />
-            <input type="text" placeholder="Etapa" value={play.leagueId || ""} onChange={(e) => onUpdate("leagueId", e.target.value)} className="input bg-[#15161D] border border-[#3A4052] rounded-sm text-xs text-center w-[70px]" />
-            <input type="datetime-local" value={play.gameStartAt || ""} onChange={(e) => onUpdate("gameStartAt", e.target.value)} className="input bg-[#15161D] border border-[#3A4052] rounded-sm text-xs text-center w-[70px]" />
-            <input type="datetime-local" value={play.gameEndAt || ""} onChange={(e) => onUpdate("gameEndAt", e.target.value)} className="input bg-[#15161D] border border-[#3A4052] rounded-sm text-xs text-center w-[70px]" />
-            <input type="number" placeholder="Acertos" value={play.hits} onChange={(e) => onUpdate("hits", parseInt(e.target.value) || 0)} className="input bg-[#15161D] border border-[#3A4052] rounded-sm text-xs text-center w-[70px]" />
+
+          <div className="flex gap-2 mb-2">
+            <div className="flex-1">
+              <label className="block text-xs text-[#B0B6C9] mb-1">Time da Casa</label>
+              <input
+                type="text"
+                placeholder="Time da casa"
+                value={play.homeTeam || ""}
+                onChange={(e) => onUpdate("homeTeam", e.target.value)}
+                className="w-full h-[30px] text-center text-[#667191] rounded-sm text-xs bg-[#15161D] border border-[#3A4052] px-2"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs text-[#B0B6C9] mb-1">Time Visitante</label>
+              <input
+                type="text"
+                placeholder="Time visitante"
+                value={play.awayTeam || ""}
+                onChange={(e) => onUpdate("awayTeam", e.target.value)}
+                className="w-full h-[30px] text-center text-[#667191] rounded-sm text-xs bg-[#15161D] border border-[#3A4052] px-2"
+              />
+            </div>
           </div>
-          <button type="button" className="mt-2 text-sm text-blue-600 underline" onClick={onMinimize}>Salvar</button>
+
+          <div className="flex gap-2 mb-2">
+            <div className="flex-1">
+              <label className="block text-xs text-[#B0B6C9] mb-1">Região</label>
+              <input
+                type="text"
+                placeholder="Região"
+                value={play.country || ""}
+                onChange={(e) => onUpdate("country", e.target.value)}
+                className="w-full h-[30px] text-center text-[#667191] rounded-sm text-xs bg-[#15161D] border border-[#3A4052] px-2"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs text-[#B0B6C9] mb-1">Etapa</label>
+              <input
+                type="text"
+                placeholder="Etapa"
+                value={play.leagueId || ""}
+                onChange={(e) => onUpdate("leagueId", e.target.value)}
+                className="w-full h-[30px] text-center text-[#667191] rounded-sm text-xs bg-[#15161D] border border-[#3A4052] px-2"
+              />
+            </div>
+            <div className="w-[80px]">
+              <label className="block text-xs text-[#B0B6C9] mb-1">Acertos</label>
+              <input
+                type="number"
+                placeholder="0"
+                value={play.hits}
+                onChange={(e) => onUpdate("hits", parseInt(e.target.value) || 0)}
+                className="w-full h-[30px] text-center text-[#667191] rounded-sm text-xs bg-[#15161D] border border-[#3A4052] px-2"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-2 mb-2">
+            <div className="flex-1">
+              <label className="block text-xs text-[#B0B6C9] mb-1">Data de Início</label>
+              <input
+                type="datetime-local"
+                value={play.gameStartAt || ""}
+                onChange={(e) => onUpdate("gameStartAt", e.target.value)}
+                className="w-[160px] h-[30px] text-center text-[#667191] rounded-sm text-xs bg-[#15161D] border border-[#3A4052] px-2"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs text-[#B0B6C9] mb-1">Data de Fim</label>
+              <input
+                type="datetime-local"
+                value={play.gameEndAt || ""}
+                onChange={(e) => onUpdate("gameEndAt", e.target.value)}
+                className="w-[160px] h-[30px] text-center text-[#667191] rounded-sm text-xs bg-[#15161D] border border-[#3A4052] px-2"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-center mt-3">
+            <button
+              type="button"
+              onClick={onMinimize}
+              className="px-4 w-full h-[30px] text-[11px] text-[#B0B6C9] border border-[#3A4052] rounded-sm bg-[#15161D] hover:bg-[#282B38]"
+            >
+              Salvar alterações
+            </button>
+          </div>
         </>
+
       ) : (
         <div className="flex justify-between items-center">
           <div>

@@ -2,8 +2,11 @@ import * as yup from 'yup';
 
 export const jackpotSchema = yup.object({
   jackpotName: yup.string().required('Nome do Jackpot é obrigatório'),
-  jackpotStartDate: yup.date().nullable(),
-
+  jackpotStartDate: yup
+    .date()
+    .typeError('Data de início é obrigatória')
+    .nullable()
+    .required('Data de início é obrigatória'),
 
   jackpotType: yup
     .mixed<'single-guess-mode' | 'all-open-mode'>()
@@ -55,11 +58,14 @@ export const jackpotSchema = yup.object({
       String(originalValue).trim() === "" ? undefined : value
     ),
 
-  hits: yup.number().when('jackpotType', {
-    is: 'single-guess-mode',
-    then: (schema) => schema.required('Informe o número de acertos').min(1),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  hits: yup.number()
+    .typeError('Quantidade de acertos deve ser um número')
+    .when('jackpotType', {
+      is: 'single-guess-mode',
+      then: (schema) => schema.required('Informe o número de acertos').min(1),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+
 
   plays: yup.array().when('jackpotType', {
     is: 'all-open-mode',

@@ -50,7 +50,7 @@ export const deleteJackpot = createAsyncThunk(
   'jackpot/deleteJackpot',
   async (jackpotId: string, { rejectWithValue }) => {
     try {
-      await api.delete(`/api/jackpots/${jackpotId}`);
+      await api.delete(`/jackpots/delete-jackpot/${jackpotId}`);
       return jackpotId;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

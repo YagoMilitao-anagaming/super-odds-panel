@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import JackpotForm from "../app/jackpot-form"; // Ajuste o path se necessário
+import JackpotForm from "../app/jackpot-form";
 
 export default function SideForm() {
 

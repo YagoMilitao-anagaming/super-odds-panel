@@ -1,60 +1,47 @@
-import React from 'react';
+'use client';
 
-type SmarticoType = '7kbet' | 'cassino';
+import * as Select from '@radix-ui/react-select';
+import { ChevronDown, Check } from 'lucide-react';
+import { SmarticoType } from "@/constants/smarticoTypes";
 
 interface Props {
-  selected: SmarticoType;
+  selected: SmarticoType | '';
   onChange: (value: SmarticoType) => void;
 }
 
-export const smarticoCodes: Record<'7kbet' | 'cassino', string> = {
-  '7kbet': '6271111',
-  'cassino': '6651071',
-};
+export default function SmarticoTypeSelector({ selected, onChange }: Props) {
+  const getLabel = (value: SmarticoType | '') => {
+    if (value === 'cassino') return 'Cassino';
+    if (value === '7kbet') return '7k Bet';
+    return '';
+  };
 
-const SmarticoTypeSelector: React.FC<Props> = ({ selected, onChange }) => {
   return (
     <div className="sm:col-span-3">
 
-      {/* <label className="block text-sm/6 font-medium text-gray-900 mb-1">
-        Código smartico
-      </label> */}
+      <Select.Root value={selected} onValueChange={(value) => onChange(value as SmarticoType)}>
+        <Select.Trigger className="flex items-center justify-between w-[100px] rounded-md bg-[#15161D] px-3 py-1.5 border border-[#3A4052] text-xs text-[#B0B6C9]">
+          {selected ? (
+            <Select.Value>{getLabel(selected)}</Select.Value>
+          ) : (
+            <span className="text-[#667191]">Selecione</span>
+          )}
+          <ChevronDown className="w-4 h-4 text-[#858FAB]" />
+        </Select.Trigger>
 
-      <div className="flex items-center space-x-4 mb-3 text-xs">
-        {(['7kbet', 'cassino'] as SmarticoType[]).map((option) => (
-          <label key={option} className="flex items-center space-x-2 cursor-pointer mt-1.5 mb-1.5">
-            <input
-              type="radio"
-              name="smarticoType"
+        <Select.Content className="bg-[#15161D] border border-[#3A4052] rounded-md shadow-md text-xs text-[#B0B6C9]">
+          {(['7kbet', 'cassino'] as SmarticoType[]).map((option) => (
+            <Select.Item
+              key={option}
               value={option}
-              checked={selected === option}
-              onChange={() => onChange(option)}
-              className="peer hidden"
-            />
-            <div
-              className={`
-        w-4 h-4 rounded-full border
-        ${selected === option ? 'bg-[#858FAB] border-[#858FAB]' : 'bg-[#15161D] border-[#858FAB]'}
-        peer-checked:bg-[#FC830B] peer-checked:border-[#FC830B]
-      `}
-            ></div>
-            <span>{option === '7kbet' ? '7k bet' : 'Cassino'}</span>
-          </label>
-        ))}
-
-      </div>
-
-      <div>
-        <input
-          id="smartico-code"
-          name="smartico-code"
-          value={smarticoCodes[selected]}
-          disabled
-          className="block w-full rounded-md bg-[#15161D] px-3 py-1.5 border border-[#3A4052] text-base text-[#858FAB] placeholder:text-[#3A4052]  sm:text-xs"
-        />
-      </div>
+              className={`cursor-pointer px-3 py-1.5 hover:bg-gradient-to-r from-red-500 to-orange-500 hover:text-white flex items-center justify-between ${selected === option ? 'bg-[#282B38]' : ''}`}
+            >
+              <Select.ItemText>{getLabel(option)}</Select.ItemText>
+              {selected === option && <Check className="w-3 h-3 text-white" />}
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select.Root>
     </div>
   );
-};
-
-export default SmarticoTypeSelector;
+}

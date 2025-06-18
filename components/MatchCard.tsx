@@ -1,8 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import { useAppDispatch } from "@/app/store/hooks";
-import { deleteJackpot, fetchAllJackpots, deletePlayFromJackpot } from "@/app/features/jackpot/jackpotSlice";
+import { deleteJackpot, fetchAllJackpots } from "@/app/features/jackpot/jackpotSlice";
 import ConfirmModal from "./ConfirmModal";
+import SideFormEdit from "./SideFormEdit";
 
 interface MatchCardProps {
     title: string;
@@ -11,7 +12,6 @@ interface MatchCardProps {
     house: string;
     date: string;
     id: string;
-    playId: string;
     description: string;
 };
 
@@ -22,20 +22,26 @@ export default function MatchCard({
     house,
     date,
     id,
-    playId,
-    description,
+    description
+
 }: MatchCardProps) {
 
     const dispatch = useAppDispatch();
-
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const isMetricEnabled = status.toLowerCase() === "finished";
+    const isDisabledMetric = !isMetricEnabled
+    const isEditable = status.toLowerCase() === "active" || status.toLowerCase() === "processing";
+    const isActive = status.toLowerCase() === "active";
+    const isProcessing = status.toLowerCase() === "processing";
+
+
 
     const handleDelete = async () => {
         try {
-            await dispatch(deletePlayFromJackpot({ jackpotId: id, playId })).unwrap();
+            await dispatch(deleteJackpot(id)).unwrap();
             await dispatch(fetchAllJackpots());
         } catch (error) {
-            console.error('Erro ao deletar jogo:', error);
+            console.error('Erro ao deletar jackpot:', error);
         } finally {
             setIsModalOpen(false);
         }
@@ -115,15 +121,29 @@ export default function MatchCard({
 
             <div className="flex flex-col items-end gap-2 ml-2 mt-2">
                 <div className="flex items-center gap-2">
-                    <button disabled className=" opacity-50 flex items-center justify-center gap-2 w-[100px] h-[27px] text-xs text-[#B0B6C9] rounded-md bg-[#282B38]">
+                    <button disabled={isDisabledMetric} className={`flex items-center justify-center gap-2 w-[100px] h-[27px] text-xs text-[#B0B6C9] rounded-md bg-[#282B38] ${isMetricEnabled ? "opacity-100" : "opacity-50"}`}>
                         <img src="/eye.svg" alt="eye" className="w-3.5 h-3.5" />
                         Métricas
                     </button>
 
-                    <button className="flex items-center justify-center gap-2 w-[80px] h-[27px] text-xs text-[#667191] rounded-md bg-[#15161D] border border-[#667191]">
-                        <img src="/edit.svg" alt="edit" className="w-3.5 h-3.5" />
-                        Editar
+                    <button
+                        disabled={!isEditable}
+                        className={`flex items-center justify-center gap-2 h-[27px] text-xs rounded-md px-2
+                                ${!isEditable
+                                ? "opacity-50 text-[#667191] bg-[#15161D] border border-[#667191]"
+                                : isActive
+                                    ? "text-[#667191] bg-[#15161D] border border-[#667191]"
+                                    : "text-white bg-gradient-to-r from-red-500 to-orange-500"
+                            }`}>
+                        <img
+                            src={!isEditable ? "/edit.svg" : isActive ? "/edit.svg" : "/edit-2.svg"}
+                            className="w-3 h-3"
+                            alt="edit"
+                        />
+                        {isEditable ? (isActive ? "Editar" : "Editar resultados") : "Editar"}
                     </button>
+
+
 
                     <button onClick={() => setIsModalOpen(true)} className="flex items-center justify-center w-[30px] h-[27px] text-xs text-[#667191] rounded-md bg-[#15161D] border border-[#667191]">
                         <img src="/trash.svg" alt="trash" className="w-3.5 h-3.5" />

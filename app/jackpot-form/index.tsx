@@ -7,7 +7,9 @@ import { useState, useEffect } from "react";
 import { useAppDispatch } from "../store/hooks";
 import { createJackpot, fetchAllJackpots } from "@/app/features/jackpot/jackpotSlice";
 import SmarticoTypeSelector from "@/components/SmarticoTypeSelector";
-import { smarticoCodes } from "@/components/SmarticoTypeSelector";
+import FormSelect from '@/components/FormSelect';
+import { FormSelectOption } from '@/components/FormSelect';
+import { SmarticoType, smarticoCodes } from "@/constants/smarticoTypes";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Play } from "@/app/features/jackpot/types";
 import { toZonedTime, format } from 'date-fns-tz';
@@ -24,6 +26,7 @@ type JackpotFormProps = {
 type JackpotFormInputs = {
     jackpotDateRange: DateRange | undefined;
 };
+
 export default function JackpotForm({ onClose }: JackpotFormProps) {
 
     const convertToBrazilianFormat = (date: Date | string | null | undefined) => {
@@ -47,6 +50,16 @@ export default function JackpotForm({ onClose }: JackpotFormProps) {
         resolver: yupResolver(jackpotSchema) as any,
     });
 
+    const jackpotTypeOptions: FormSelectOption<"single-guess-mode" | "all-open-mode">[] = [
+        { label: "Palpite único", value: "single-guess-mode" },
+        { label: "Palpite múltiplo", value: "all-open-mode" },
+    ];
+
+    const jackpotPrizeOptions: FormSelectOption<"Freebet" | "Saldo real">[] = [
+        { label: "Freebet", value: "Freebet" },
+        { label: "Saldo real", value: "Saldo real" },
+    ];
+
     const [multiGuessPlays, setMultiGuessPlays] = useState<MultiGuessPlay[]>([]);
 
     const watchedHits = watch("hits");
@@ -58,16 +71,21 @@ export default function JackpotForm({ onClose }: JackpotFormProps) {
             ? `Ter ${watchedHits} / ${watchedHits} respostas corretas para partilhar R$${(watchedValue)}`
             : "";
 
-    const [smarticoType, setSmarticoType] = useState<'7kbet' | 'cassino'>('7kbet');
+    const [smarticoType, setSmarticoType] = useState<SmarticoType | ''>('');
 
     const dispatch = useAppDispatch();
 
     // Log the errors for debugging
-    console.log("Erros de validação:", errors);
+    // console.log("Erros de validação:", errors);
 
     const onSubmit: SubmitHandler<JackpotFormData> = async (formData) => {
 
         try {
+
+            if (!smarticoType) {
+                console.error('Por favor selecione uma casa Smartico');
+                return;
+            }
 
             const smarticoCode = smarticoCodes[smarticoType];
             const finalPlays: Play[] = jackpotType === "all-open-mode"
@@ -190,17 +208,20 @@ export default function JackpotForm({ onClose }: JackpotFormProps) {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-12">
                 <div className="border-b border-[#282B38] mb-9 pb-12">
-                    <h2 className="text-base/7 text-[14px] text-white">Informações Gerais do Jackpot</h2>
+                    <div className="flex items-center mb-5 gap-14">
+                        <h2 className="text-base/7 text-[14px] text-white">Informações Gerais do Jackpot</h2>
+                        <SmarticoTypeSelector selected={smarticoType} onChange={(value) => setSmarticoType(value)} />
+                    </div>
                     <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         <div className="sm:col-span-4">
                             <label htmlFor="username" className="block text-xs font-medium text-[#B0B6C9]">
-                                Nome do Jackpot
+                                Nome do Jackpot*
                             </label>
                             <div className="mt-2">
-                                <div className=" w-[380px] h-[30px] flex items-center rounded-md bg-[#15161D] pl-3 outline-1 -outline-offset-1 outline-[#3A4052]">
+                                <div className=" w-[380px] h-[30px] flex items-center rounded-md bg-[#15161D] pl-3 outline-1 -outline-offset-1 outline-[#3A4052] ">
                                     <input
                                         {...register("jackpotName")}
-                                        className=" py-1.5 pr-3 pl-1 text-base text-[#B0B6C9] placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                                        className=" py-1.5 pr-3 pl-1 text-base text-[#B0B6C9] placeholder:text-gray-400 focus:outline-none sm:text-xs"
                                     />
                                 </div>
                             </div>
@@ -213,7 +234,7 @@ export default function JackpotForm({ onClose }: JackpotFormProps) {
 
                         <div className="sm:col-span-3">
                             <label className="block text-sm/6 font-medium text-xs text-[#B0B6C9]">
-                                Data de início do Jackpot
+                                Data de início do Jackpot*
                             </label>
                             <div className="mt-2 grid grid-cols-1 w-[380px] h-[30px]">
                                 <input
@@ -232,16 +253,16 @@ export default function JackpotForm({ onClose }: JackpotFormProps) {
 
                         <div className="sm:col-span-4">
                             <label className="block text-xs font-medium text-[#B0B6C9]">
-                                Tipo de Jackpot
+                                Tipo de Jackpot*
                             </label>
                             <div className="mt-2 grid grid-cols-1 w-[380px] h-[30px]">
-                                <select
-                                    {...register("jackpotType")}
-                                    className="col-start-1 row-start-1 text-xs appearance-none rounded-md bg-[#15161D] py-1.5 pr-8 pl-3 text-base text-[#B0B6C9] outline-1 -outline-offset-1 outline-[#3A4052]"
-                                >
-                                    <option value="single-guess-mode">Palpite único</option>
-                                    <option value="all-open-mode">Palpite múltiplo</option>
-                                </select>
+                                <FormSelect<"single-guess-mode" | "all-open-mode">
+                                    placeholder="Selecione o tipo de Jackpot"
+                                    label=""
+                                    value={watch("jackpotType")}
+                                    onChange={(val) => setValue("jackpotType", val)}
+                                    options={jackpotTypeOptions}
+                                />
                             </div>
                             {errors.jackpotType && (
                                 <p className="mt-2 text-[10px] text-[#FC830B]">
@@ -385,7 +406,6 @@ export default function JackpotForm({ onClose }: JackpotFormProps) {
                         />
                     )}
 
-
                 </div>
 
             </div>
@@ -394,16 +414,15 @@ export default function JackpotForm({ onClose }: JackpotFormProps) {
                 <h2 className="text-[14px] text-white mt-10 ">Premiação</h2>
                 <div className="sm:col-span-3 mt-5">
                     <label className="block text-xs font-medium text-[#B0B6C9]">
-                        Tipo de prêmio
+                        Tipo de prêmio*
                     </label>
                     <div className="mt-2 grid grid-cols-1 w-[380px] h-[30px]">
-                        <select
-                            {...register("prizes")}
-                            className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-[#15161D] py-1.5 pr-8 pl-3 text-base text-[#B0B6C9] outline-1 -outline-offset-1 outline-[#3A4052] sm:text-xs"
-                        >
-                            <option value="Freebet">Freebet</option>
-                            <option value="Saldo real">Saldo real</option>
-                        </select>
+                        <FormSelect<"Freebet" | "Saldo real">
+                            label=""
+                            value={watch('prizes')}
+                            onChange={(val) => setValue('prizes', val)}
+                            options={jackpotPrizeOptions}
+                        />
                     </div>
                     {errors.prizes && (
                         <p className="mt-2 text-[10px] text-[#FC830B]">
@@ -414,13 +433,11 @@ export default function JackpotForm({ onClose }: JackpotFormProps) {
 
                 <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
-                    <SmarticoTypeSelector selected={smarticoType} onChange={setSmarticoType} />
-
-                    <div className="sm:col-span-3 relative">
-                        <label htmlFor="value" className="block text-xs mt-1 mb-5.5 font-medium text-[#B0B6C9]">
-                            Valor do prêmio
+                    <div className="sm:col-span-4">
+                        <label htmlFor="value" className="block text-xs mt-1 font-medium text-[#B0B6C9]">
+                            Valor do prêmio*
                         </label>
-                        <div className="mt-2 relative">
+                        <div className="mt-2 relative w-[380px] h-[30px]">
                             <span className="absolute left-3 top-1/2 text-sm -translate-y-1/2 text-gray-400">R$</span>
                             <input
                                 inputMode="decimal"
@@ -440,17 +457,22 @@ export default function JackpotForm({ onClose }: JackpotFormProps) {
 
                     <div className="sm:col-span-4">
                         <label className="block text-xs font-medium text-[#B0B6C9]">
-                            Quantidade de Acertos Necessários
+                            Quantidade de Acertos Necessários*
                         </label>
                         <div className="mt-2 grid grid-cols-1 w-[380px] h-[30px]">
                             <input
                                 type="number"
-                                {...register("hits")}
+                                {...register('hits', { valueAsNumber: true })}
                                 placeholder="Ex: Quantos palpites precisam ser corretos para concorrer ao prêmio."
                                 className="block w-full rounded-md w-10 bg-[#15161D] px-3 py-1.5 text-base text-[#B0B6C9] outline-1 -outline-offset-1 outline-[#3A4052] placeholder:text-gray-400 sm:text-[10px]"
                             >
                             </input>
                         </div>
+                        {errors.hits && (
+                            <p className="mt-2 text-[10px] text-[#FC830B]">
+                                {errors.hits.message}
+                            </p>
+                        )}
                     </div>
 
                 </div>

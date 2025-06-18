@@ -1,11 +1,12 @@
-import SideForm from "./SideForm";
+import SideForm from "./SideFormCreate";
 
 type HeaderBarProps = {
     onFilterLast7Days?: () => void;
     filterActive?: boolean;
+    onSearchChange?: (query: string) => void;
 };
 
-export default function HeaderBar({ onFilterLast7Days, filterActive }: HeaderBarProps) {
+export default function HeaderBar({ onSearchChange, onFilterLast7Days, filterActive }: HeaderBarProps) {
     return (
         <div>
             <div className="inline-flex items-center gap-3 mt-5 mb-3 relative w-full">
@@ -25,6 +26,7 @@ export default function HeaderBar({ onFilterLast7Days, filterActive }: HeaderBar
                     <input
                         type="text"
                         placeholder="Pesquisar"
+                        onChange={(e) => onSearchChange?.(e.target.value)}
                         className="w-[500px] h-[27px] mr-4 rounded-md border border-[#282B38] placeholder-[#667191] focus:outline-none focus:ring-0 py-2 pl-10 pr-4 text-xs text-[#667191]"
                     />
                 </div>
@@ -52,7 +54,7 @@ export default function HeaderBar({ onFilterLast7Days, filterActive }: HeaderBar
                     08 Out - 14 Out 2025
                 </button>
 
-                <button className="flex items-center gap-1 px-2 ml-2 justify-center rounded-md border border-[#282B38] bg-[#101116] text-[#B0B6C9] text-[9px] w-[90] h-[27px]">
+                <button disabled className="flex items-center gap-1 opacity-50 px-2 ml-2 justify-center rounded-md border border-[#282B38] bg-[#101116] text-[#B0B6C9] text-[9px] w-[90] h-[27px]">
                     <img
                         src="/sliders.svg"
                         alt="Sliders"

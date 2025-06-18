@@ -28,7 +28,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         <h2 className="text-lg font-semibold mb-2">{title}</h2>
         <p className="text-sm mb-4 text-[#B0B6C9]">{description}</p>
 
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-center gap-5">
           <button
           type='button'
             onClick={onCancel}
