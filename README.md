@@ -33,4 +33,25 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying);;;;;;;;; for more details.
+
+## Environment variables 
+For the project works you need insert in your .env.local file 
+
+# Persistence
+MONGODB_URI=
+
+# Auth
+AUTH_TOKEN=
+NEXT_PUBLIC_AUTH_TOKEN=
+
+#Cors
+LOCAL_DOMAIN=
+NEXT_PUBLIC_LOCAL_DOMAIN=
+PROD_DOMAIN=    
+
+# AWS
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=
+AWS_BUCKET_NAME= 
