@@ -14,7 +14,6 @@ import {
 } from './styles';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
-// Tipagem que aceita single ou range
 type ThemeDatePickerProps =
 	| {
 		mode: 'single';

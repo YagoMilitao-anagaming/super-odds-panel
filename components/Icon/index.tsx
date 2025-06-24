@@ -77,7 +77,7 @@ type IconOptions = {
 	'theme/campaigns':
 	| 'clicks'
 	| 'visits'
-	| 'plays'
+	| 'participants'
 	| 'bonus-given'
 	| 'statistic'
 	| 'campaigns'
@@ -85,7 +85,7 @@ type IconOptions = {
 	| 'minigame'
 	| 'minigame-clicks'
 	| 'minigame-visits'
-	| 'minigame-plays'
+	| 'minigame-participants'
 	| 'minigame-bonus'
 	| 'campaign-geral'
 	| 'active-players'
@@ -96,7 +96,6 @@ type IconOptions = {
 	| 'info';
 };
 
-// Tipagem condicional para garantir que ao escolher um tipo, sejam mostradas apenas as opções válidas de ícones.
 type ThemeIconProps<T extends keyof IconOptions> = {
 	type: T;
 	icon: IconOptions[T];

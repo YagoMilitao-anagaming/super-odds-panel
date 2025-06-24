@@ -2,15 +2,15 @@
 
 import * as Select from '@radix-ui/react-select';
 import { ChevronDown, Check } from 'lucide-react';
-import { SmarticoType } from "@/constants/smarticoTypes";
+import { BethouseType } from "@/constants/betHouseTypes";
 
-interface Props {
-  selected: SmarticoType | '';
-  onChange: (value: SmarticoType) => void;
+interface BetHouseypeSelectorProps {
+  selected: BethouseType | '';
+  onChange: (value: BethouseType) => void;
 }
 
-export default function SmarticoTypeSelector({ selected, onChange }: Props) {
-  const getLabel = (value: SmarticoType | '') => {
+function BetHouseypeSelector({ selected, onChange }: BetHouseypeSelectorProps) {
+  const getLabel = (value: BethouseType | '') => {
     if (value === 'cassino') return 'Cassino';
     if (value === '7kbet') return '7k Bet';
     return '';
@@ -19,7 +19,7 @@ export default function SmarticoTypeSelector({ selected, onChange }: Props) {
   return (
     <div className="sm:col-span-3">
 
-      <Select.Root value={selected} onValueChange={(value) => onChange(value as SmarticoType)}>
+      <Select.Root value={selected} onValueChange={(value) => onChange(value as BethouseType)}>
         <Select.Trigger className="flex items-center justify-between w-[100px] rounded-md bg-[#15161D] px-3 py-1.5 border border-[#3A4052] text-xs text-[#B0B6C9]">
           {selected ? (
             <Select.Value>{getLabel(selected)}</Select.Value>
@@ -30,7 +30,7 @@ export default function SmarticoTypeSelector({ selected, onChange }: Props) {
         </Select.Trigger>
 
         <Select.Content className="bg-[#15161D] border border-[#3A4052] rounded-md shadow-md text-xs text-[#B0B6C9]">
-          {(['7kbet', 'cassino'] as SmarticoType[]).map((option) => (
+          {(['7kbet', 'cassino'] as BethouseType[]).map((option) => (
             <Select.Item
               key={option}
               value={option}
@@ -45,3 +45,4 @@ export default function SmarticoTypeSelector({ selected, onChange }: Props) {
     </div>
   );
 }
+export default BetHouseypeSelector

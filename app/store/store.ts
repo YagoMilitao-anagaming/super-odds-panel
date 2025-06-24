@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import jackpotReducer from '../features/jackpot/jackpotSlice';
+import superOddReducer from '../features/superOdd/superOddSlice';
 
 export const store = configureStore({
   reducer: {
-    jackpot: jackpotReducer,
+    superOdd: superOddReducer
   },
 });
 

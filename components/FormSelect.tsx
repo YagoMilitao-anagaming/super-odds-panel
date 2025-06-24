@@ -27,13 +27,13 @@ const FormSelect = <T extends string>({
   return (
     <div className="sm:col-span-3">
       <label className="block text-xs mb-1 text-[#B0B6C9]">{label}</label>
-
+ 
       <Select.Root value={value} onValueChange={(val) => onChange(val as T)}>
         <Select.Trigger className="relative flex items-center justify-between w-full rounded-md bg-[#15161D] px-3 py-1.5 border border-[#3A4052] text-xs text-[#B0B6C9]">
           <Select.Value placeholder={placeholder} />
           <ChevronDown className="w-4 h-4 text-[#858FAB]" />
         </Select.Trigger>
-
+ 
         <Select.Portal>
           <Select.Content
             position="popper"
@@ -60,5 +60,5 @@ const FormSelect = <T extends string>({
     </div>
   );
 };
-
+ 
 export default FormSelect;
